@@ -17,3 +17,4 @@ testrun.py
 
 .env
 */__pycache__/*
+!/scripts/papersolver.py

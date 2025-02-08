@@ -22,9 +22,9 @@ class LaboratoryWorkflow:
             num_papers_lit_review: int=15,
             notes: list=[],
             compile_pdf: bool=True,
-            human_in_loop_flag=None,    # TODO1: what is this
-            mlesolver_max_steps=3,      # TODO2: what is this
-            papersolver_max_steps=5     # TODO3: what is this
+            human_in_loop_flag=None,
+            mlesolver_max_steps=3,
+            papersolver_max_steps=5
         ):
         """
         Initialize laboratory workflow
@@ -38,11 +38,6 @@ class LaboratoryWorkflow:
         # load the environment variables to get the api key
         load_dotenv()
         self.openai_api_key = os.getenv("GEMINI_API_KEY")
-        # self.api_key_dict = {k: v for k, v in os.environ.items() if "GEMINI_API_KEY" in k}
-        # self.api_idx = 0
-        # self.max_api_keys = len(self.api_key_dict)
-        # assert self.max_api_keys > 0, "No API keys found in environment variables."
-        # self.openai_api_key = self.api_key_dict[self.api_idx]
 
         self.research_topic = research_topic
         self.model_backbone = agent_model_backbone
@@ -56,6 +51,13 @@ class LaboratoryWorkflow:
         self.review_ovrd_steps = 0 # review steps so far
         self.arxiv_paper_exp_time = 3
         self.reference_papers = []
+
+        # Compute budget parameters
+        self.num_ref_papers = 1
+        self.review_total_steps = 0 # num steps to take if overridden
+        self.arxiv_num_summaries = 5
+        self.mlesolver_max_steps = mlesolver_max_steps
+        self.papersolver_max_steps = papersolver_max_steps
 
 
         # Setup the workflow phases and subtasks in each phase
@@ -551,12 +553,12 @@ if __name__ == "__main__":
     parser.add_argument("--copilot-setting-file", type=str, default="copilot_settings.json", help="Path to copilot settings file")
     parser.add_argument("--llm-backend", type=str, default="gemini-2.0-flash", help="LLM backend to use for agents in Agent Laboratory")
     parser.add_argument("--compile-pdf", action="store_true", help="Compile latex into pdf during paper writing phase. Disable if you can not install pdflatex")
-    parser.add_argument("--load-existing", action="store_true", help="Load existing state without starting a new workflow")
-    parser.add_argument("--load-path", type=str, default=None, help="Path to load existing state")
     parser.add_argument("--max-steps", type=int, default=100, help="Max number of steps for each phase, i.e. compute tolerance budget")
     parser.add_argument("--num-papers-lit-review", type=int, default="15", help="Total number of papers to summarize in literature review stage")
     parser.add_argument("--papersolver-max-steps", type=int, default="5", help="Total number of paper-solver steps")
     parser.add_argument("--mlesolver-max-steps", type=int, default="3", help="Total number of mle-solver steps")
+    parser.add_argument("--load-existing", action="store_true", help="Load existing state without starting a new workflow")
+    parser.add_argument("--load-path", type=str, default=None, help="Path to load existing state")
     args = parser.parse_args()
 
     # Verify the note path is valid (exist && json)
@@ -572,7 +574,8 @@ if __name__ == "__main__":
     with open(args.copilot_setting_file, "r", encoding="utf-8") as f:
         human_in_loop = json.load(f)
 
-    if args.load_existing:
+    if args.load_existing == True:
+        print("Loading existing state...")
         if args.load_path == None:
             raise ValueError("Please provide path to load existing state.")
         with open(args.load_path, "rb") as f:
@@ -585,9 +588,9 @@ if __name__ == "__main__":
             num_papers_lit_review=args.num_papers_lit_review,
             notes=task_notes_LLM,
             compile_pdf=args.compile_pdf,
-            human_in_loop_flag=human_in_loop,                   # TODO1: what is this
-            mlesolver_max_steps=args.mlesolver_max_steps,       # TODO2: what is this
-            papersolver_max_steps=args.papersolver_max_steps,   # TODO3: what is this
+            human_in_loop_flag=human_in_loop,
+            mlesolver_max_steps=args.mlesolver_max_steps,
+            papersolver_max_steps=args.papersolver_max_steps,
         )
 
     # Loop through all research phases

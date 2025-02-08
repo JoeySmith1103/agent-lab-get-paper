@@ -144,7 +144,10 @@ def get_score(outlined_plan, latex, reward_model_llm, reviewer_type=None, attemp
                 openai_api_key=openai_api_key,
                 prompt=(
                     f"Outlined in the following text is the research plan that the machine learning engineer was tasked with building: {outlined_plan}\n\n"
-                    f"The following text is the research latex that the model produced: \n{latex}\n\n"), temp=0.0)
+                    f"The following text is the research latex that the model produced: \n{latex}\n\n"
+                ),
+                temp=0.0
+            )
             review_json = extract_json_between_markers(scoring)
 
             overall = int(review_json["Overall"]) / 10
@@ -251,7 +254,12 @@ class BaseAgent:
             f"Current Step #{step}, Phase: {phase}\n{complete_str}\n"
             f"[Objective] Your goal is to perform research on the following topic: {research_topic}\n"
             f"Feedback: {feedback}\nNotes: {notes_str}\nYour previous command was: {self.prev_comm}. Make sure your new output is very different.\nPlease produce a single command below:\n")
-        model_resp = query_model(model_str=self.model, system_prompt=sys_prompt, prompt=prompt, temp=temp, openai_api_key=self.openai_api_key)
+        model_resp = query_model(
+            model_str=self.model,
+            system_prompt=sys_prompt,
+            prompt=prompt,
+            temp=temp,
+        )
         print("^"*50, phase, "^"*50)
         model_resp = self.clean_text(model_resp)
         self.prev_comm = model_resp
@@ -301,7 +309,11 @@ class ProfessorAgent(BaseAgent):
         prompt = (
             f"""History: {history_str}\n{'~' * 10}\n"""
             f"Please produce the readme below in markdown:\n")
-        model_resp = query_model(model_str=self.model, system_prompt=sys_prompt, prompt=prompt, openai_api_key=self.openai_api_key)
+        model_resp = query_model(
+            model_str=self.model,
+            system_prompt=sys_prompt,
+            prompt=prompt,
+        )
         return model_resp.replace("```markdown", "")
 
     def context(self, phase):
@@ -618,7 +630,11 @@ class PhDStudentAgent(BaseAgent):
         prompt = (
             f"""History: {history_str}\n{'~' * 10}\n"""
             f"Please produce the requirements.txt below in markdown:\n")
-        model_resp = query_model(model_str=self.model, system_prompt=sys_prompt, prompt=prompt, openai_api_key=self.openai_api_key)
+        model_resp = query_model(
+            model_str=self.model,
+            system_prompt=sys_prompt,
+            prompt=prompt,
+        )
         return model_resp
 
     def example_command(self, phase):

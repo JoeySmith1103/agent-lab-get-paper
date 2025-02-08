@@ -160,11 +160,13 @@ def get_score(outlined_plan, code, code_return, REWARD_MODEL_LLM, attempts=3, op
             scoring = query_model(
                 model_str=f"{REWARD_MODEL_LLM}",
                 system_prompt=sys,
-                openai_api_key=openai_api_key,
                 prompt=(
                     f"Outlined in the following text is the research plan that the machine learning engineer was tasked with building: {outlined_plan}\n\n"
                     f"The following text is the research code that the model produced: \n{code}\n\n"
-                    f"The following is the output from the model: {code_return}\n\n"), temp=0.6)
+                    f"The following is the output from the model: {code_return}\n\n"
+                ),
+                temp=0.6
+            )
             performance = extract_prompt(text=scoring, word="SCORE")
             performance = float(performance)
             return performance, f"The performance of your submission is: {performance}", True
@@ -183,10 +185,11 @@ def code_repair(code, error, ctype, REPAIR_LLM, openai_api_key=None):
             "Do not forget the opening ```python and the closing ```."
         )
         model_resp = query_model(
-            openai_api_key=openai_api_key,
             model_str=f"{REPAIR_LLM}",
             system_prompt=repair_sys,
-            prompt=f"Provided here is the error: {error}\n\nProvided below is the code:\n\n{code}", temp=0.8)
+            prompt=f"Provided here is the error: {error}\n\nProvided below is the code:\n\n{code}",
+            temp=0.8
+        )
         return extract_prompt(model_resp, "python")
     elif ctype == "edit":
         repair_sys = (
@@ -203,10 +206,11 @@ def code_repair(code, error, ctype, REPAIR_LLM, openai_api_key=None):
             "Your output should look like the following\n\n```EDIT N M\n<new lines to replace old lines>\n```"
         )
         model_resp = query_model(
-            openai_api_key=openai_api_key,
             model_str=f"{REPAIR_LLM}",
             system_prompt=repair_sys,
-            prompt=f"Provided here is the error: {error}\n\nProvided below is the code:\n\n{code}", temp=0.2)
+            prompt=f"Provided here is the error: {error}\n\nProvided below is the code:\n\n{code}",
+            temp=0.2
+        )
         return model_resp
 
 
@@ -270,10 +274,11 @@ class MLESolver:
                 err = "\n".join(error_hist)
                 err_hist = "The following is a history of your previous errors\n" + err + "\nDO NOT REPEAT THESE."
             model_resp = query_model(
-                openai_api_key=self.openai_api_key,
                 model_str=self.model,
                 system_prompt=self.system_prompt(),
-                prompt=f"{err_hist}\nYou should now use ```REPLACE to create initial code to solve the challenge. Now please enter the ```REPLACE command below:\n ", temp=1.0)
+                prompt=f"{err_hist}\nYou should now use ```REPLACE to create initial code to solve the challenge. Now please enter the ```REPLACE command below:\n ",
+                temp=1.0
+            )
             model_resp = self.clean_text(model_resp)
             cmd_str, code_lines, prev_code_ret, should_execute_code, score = self.process_command(model_resp)
             print(f"@@@ INIT ATTEMPT: Command Exec // Attempt {num_attempts}: ", str(cmd_str).replace("\n", " | "))
@@ -292,10 +297,11 @@ class MLESolver:
             if len(self.commands) == 2: cmd_app_str = "You must output either the ```EDIT or ```REPLACE command immediately. "
             else: cmd_app_str = ""
             model_resp = query_model(
-                openai_api_key=self.openai_api_key,
                 model_str=self.model,
                 system_prompt=self.system_prompt(),
-                prompt=f"The following is your history:{self.history_str()}\n\n{cmd_app_str}Now please enter a command: ", temp=1.0)
+                prompt=f"The following is your history:{self.history_str()}\n\n{cmd_app_str}Now please enter a command: ",
+                temp=1.0
+            )
             model_resp = self.clean_text(model_resp)
             self.code_lines = copy(random.choice(self.best_codes)[0])
             cmd_str, code_lines, prev_code_ret, should_execute_code, score = self.process_command(model_resp)
@@ -332,7 +338,11 @@ class MLESolver:
         code_strs = ("$"*40 + "\n\n").join([self.generate_code_lines(_code[0]) + f"\nCode Return {_code[1]}" for _code in self.best_codes])
         code_strs = f"Please reflect on the following sets of code: {code_strs} and come up with generalizable insights that will help you improve your performance on this benchmark."
         syst = self.system_prompt(commands=False) + code_strs
-        return query_model(prompt="Please reflect on ideas for how to improve your current code. Examine the provided code and think very specifically (with precise ideas) on how to improve performance, which methods to use, how to improve generalization on the test set with line-by-line examples below:\n", system_prompt=syst, model_str=f"{self.llm_str}", openai_api_key=self.openai_api_key)
+        return query_model(
+            prompt="Please reflect on ideas for how to improve your current code. Examine the provided code and think very specifically (with precise ideas) on how to improve performance, which methods to use, how to improve generalization on the test set with line-by-line examples below:\n",
+            system_prompt=syst,
+            model_str=f"{self.llm_str}",
+        )
 
     def process_command(self, model_resp):
         """
@@ -507,7 +517,11 @@ class MLESolver:
         @param code_str: (str) code string
         @return: (str) reflection string
         """
-        refl = query_model(prompt=reflect_prompt, system_prompt=self.system_prompt(commands=False), model_str=f"{self.llm_str}", openai_api_key=self.openai_api_key)
+        refl = query_model(
+            prompt=reflect_prompt,
+            system_prompt=self.system_prompt(commands=False),
+            model_str=f"{self.llm_str}",
+        )
         return f"During the previous execution, the following code was run: \n\n{code_str}\n\nThis code returned the following: \n{code_return}\nThe following is your reflection from this feedback {refl}\n"
 
     def generate_dataset_descr_prompt(self):

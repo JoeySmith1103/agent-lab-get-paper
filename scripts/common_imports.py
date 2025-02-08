@@ -40,7 +40,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset, random_split
-import tensorflow as tf
+# import tensorflow as tf
 #import keras
 
 # NLP Libraries

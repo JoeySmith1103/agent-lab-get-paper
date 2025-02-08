@@ -544,94 +544,6 @@ class LaboratoryWorkflow:
         return False
 
 
-
-def parse_arguments():
-    parser = argparse.ArgumentParser(description="AgentLaboratory Research Workflow")
-
-    parser.add_argument(
-        '--copilot-mode',
-        type=str,
-        default="False",
-        help='Enable human interaction mode.'
-    )
-
-    parser.add_argument(
-        '--deepseek-api-key',
-        type=str,
-        help='Provide the DeepSeek API key.'
-    )
-
-    parser.add_argument(
-        '--load-existing',
-        type=str,
-        default="False",
-        help='Do not load existing state; start a new workflow.'
-    )
-
-    parser.add_argument(
-        '--load-existing-path',
-        type=str,
-        help='Path to load existing state; start a new workflow, e.g. state_saves/results_interpretation.pkl'
-    )
-
-    parser.add_argument(
-        '--research-topic',
-        type=str,
-        help='Specify the research topic.'
-    )
-
-    parser.add_argument(
-        '--api-key',
-        type=str,
-        help='Provide the OpenAI API key.'
-    )
-
-    parser.add_argument(
-        '--compile-latex',
-        type=str,
-        default="True",
-        help='Compile latex into pdf during paper writing phase. Disable if you can not install pdflatex.'
-    )
-
-    parser.add_argument(
-        '--llm-backend',
-        type=str,
-        default="o1-mini",
-        help='Backend LLM to use for agents in Agent Laboratory.'
-    )
-
-    parser.add_argument(
-        '--language',
-        type=str,
-        default="English",
-        help='Language to operate Agent Laboratory in.'
-    )
-
-    parser.add_argument(
-        '--num-papers-lit-review',
-        type=str,
-        default="5",
-        help='Total number of papers to summarize in literature review stage'
-    )
-
-    parser.add_argument(
-        '--mlesolver-max-steps',
-        type=str,
-        default="3",
-        help='Total number of mle-solver steps'
-    )
-
-    parser.add_argument(
-        '--papersolver-max-steps',
-        type=str,
-        default="5",
-        help='Total number of paper-solver steps'
-    )
-
-
-    return parser.parse_args()
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AgentLaboratory using LLMs")
     parser.add_argument("--research-topic", type=str, required=True, help="Research topic to explore")
@@ -645,7 +557,7 @@ if __name__ == "__main__":
     parser.add_argument("--num-papers-lit-review", type=int, default="15", help="Total number of papers to summarize in literature review stage")
     parser.add_argument("--papersolver-max-steps", type=int, default="5", help="Total number of paper-solver steps")
     parser.add_argument("--mlesolver-max-steps", type=int, default="3", help="Total number of mle-solver steps")
-    args = parse_arguments()
+    args = parser.parse_args()
 
     # Verify the note path is valid (exist && json)
     if not os.path.exists(args.note_path) or not args.note_path.endswith(".json"):

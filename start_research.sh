@@ -4,7 +4,7 @@ python ai_lab_repo.py \
     --note-path="note.json" \
     --copilot-setting-file="copilot_settings.json" \
     --llm-backend="gemini-2.0-flash" \
-    --compile-latex \
+    --compile-pdf \
     --max-steps=100 \
     --num-papers-lit-review=15 \
     --papersolver-max-steps=5 \

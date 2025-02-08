@@ -20,11 +20,11 @@ class JsonValidator():
             }
         }
 
-    def validate(self, json_file) -> bool:
+    def validate_json(self, json_file) -> bool:
         try:
             with open(json_file, "r", encoding="utf-8") as file:
                 data = json.load(file)
-            validate(instance=data, schema=schema)
+            validate(instance=data, schema=self.schema)
             return True
         except ValidationError as e:
             return False

@@ -9,7 +9,7 @@
     },
     {
         "phases": ["running experiments"],
-        "note": "Use the following code to inference gpt-4o-mini: \nfrom openai import OpenAI\nos.environ["OPENAI_API_KEY"] = "{api_key}"\nclient = OpenAI()\ncompletion = client.chat.completions.create(\nmodel="gpt-4o-mini-2024-07-18", messages=messages)\nanswer = completion.choices[0].message.content\n"
+        "note": "Use the following code to inference gpt-4o-mini: \nfrom openai import OpenAI\nos.environ['OPENAI_API_KEY'] = '{api_key}'\nclient = OpenAI()\ncompletion = client.chat.completions.create(\nmodel='gpt-4o-mini-2024-07-18', messages=messages)\nanswer = completion.choices[0].message.content\n"
     },
     {
         "phases": ["running experiments"],
@@ -29,6 +29,6 @@
     },
     {
         "phases": ["literature review", "plan formulation", "data preparation", "running experiments", "results interpretation", "report writing", "report refinement"],
-        "note": "You should always write in the following language to converse and to write the report in: English.",
+        "note": "You should always write in the following language to converse and to write the report in: English."
     }
 ]

@@ -258,9 +258,9 @@ class LaboratoryWorkflow:
         report_notes = [_note["note"] for _note in self.ml_engineer.notes if "report writing" in _note["phases"]]
         report_notes = f"Notes for the task objective: {report_notes}\n" if len(report_notes) > 0 else ""
         # instantiate mle-solver
-        from papersolver import PaperSolver
+        from scripts.papersolver import PaperSolver
         self.reference_papers = []
-        solver = PaperSolver(notes=report_notes, max_steps=self.papersolver_max_steps, plan=lab.phd.plan, exp_code=lab.phd.results_code, exp_results=lab.phd.exp_results, insights=lab.phd.interpretation, lit_review=lab.phd.lit_review, ref_papers=self.reference_papers, topic=research_topic, openai_api_key=self.openai_api_key, llm_str=self.model_backbone["report writing"], compile_pdf=compile_pdf)
+        solver = PaperSolver(notes=report_notes, max_steps=self.papersolver_max_steps, plan=lab.phd.plan, exp_code=lab.phd.results_code, exp_results=lab.phd.exp_results, insights=lab.phd.interpretation, lit_review=lab.phd.lit_review, ref_papers=self.reference_papers, topic=args.research_topic, openai_api_key=self.openai_api_key, llm_str=self.model_backbone["report writing"], compile_pdf=args.compile_pdf)
         # run initialization for solver
         solver.initial_solve()
         # run solver for N mle optimization steps
@@ -550,7 +550,7 @@ if __name__ == "__main__":
     parser.add_argument("--note-path", type=str, required=True, help="Path to notes for agents to follow during tasks")
     parser.add_argument("--copilot-setting-file", type=str, default="copilot_settings.json", help="Path to copilot settings file")
     parser.add_argument("--llm-backend", type=str, default="gemini-2.0-flash", help="LLM backend to use for agents in Agent Laboratory")
-    parser.add_argument("--compile-latex", action="store_true", help="Compile latex into pdf during paper writing phase. Disable if you can not install pdflatex")
+    parser.add_argument("--compile-pdf", action="store_true", help="Compile latex into pdf during paper writing phase. Disable if you can not install pdflatex")
     parser.add_argument("--load-existing", action="store_true", help="Load existing state without starting a new workflow")
     parser.add_argument("--load-path", type=str, default=None, help="Path to load existing state")
     parser.add_argument("--max-steps", type=int, default=100, help="Max number of steps for each phase, i.e. compute tolerance budget")
@@ -563,7 +563,7 @@ if __name__ == "__main__":
     if not os.path.exists(args.note_path) or not args.note_path.endswith(".json"):
         raise ValueError("Please provide a valid path to the notes file.")
     json_validator = JsonValidator()
-    if json_validator.validate(args.note_path) is False:
+    if json_validator.validate_json(args.note_path) == False:
         raise ValueError("Please provide a valid json file that match the specified schema.")
     with open(args.note_path, "r", encoding="utf-8") as f:
         task_notes_LLM = json.load(f)
@@ -575,7 +575,7 @@ if __name__ == "__main__":
     if args.load_existing:
         if args.load_path == None:
             raise ValueError("Please provide path to load existing state.")
-        with open(load_path, "rb") as f:
+        with open(args.load_path, "rb") as f:
             lab = pickle.load(f)
     else:
         lab = LaboratoryWorkflow(

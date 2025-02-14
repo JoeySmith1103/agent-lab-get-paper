@@ -6,7 +6,7 @@ python ai_lab_repo.py \
     --llm-backend="gemini-2.0-flash" \
     --compile-pdf \
     --max-steps=100 \
-    --num-papers-lit-review=10 \
+    --num-papers-lit-review=5 \
     --papersolver-max-steps=5 \
     --mlesolver-max-steps=3 \
     # --load-existing \

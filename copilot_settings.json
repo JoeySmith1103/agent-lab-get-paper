@@ -1,9 +1,9 @@
 {
-    "literature review":      true,
-    "plan formulation":       true,
-    "data preparation":       true,
-    "running experiments":    true,
-    "results interpretation": true,
-    "report writing":         true,
-    "report refinement":      true
+    "literature review":      false,
+    "plan formulation":       false,
+    "data preparation":       false,
+    "running experiments":    false,
+    "results interpretation": false,
+    "report writing":         false,
+    "report refinement":      false
 }

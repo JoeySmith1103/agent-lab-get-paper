@@ -1,6 +1,6 @@
 export PYTHONPATH=$PYTHONPATH:$(pwd)/scripts
 python ai_lab_repo.py \
-    --research-topic="Long-horizon mobile manipulation in robotics using OmniGibson as simulator" \
+    --research-topic="Long-horizon mobile manipulation in robotics" \
     --note-path="note.json" \
     --copilot-setting-file="copilot_settings.json" \
     --llm-backend="gemini-2.0-flash" \

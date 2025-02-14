@@ -19,7 +19,7 @@ class LaboratoryWorkflow:
             research_topic: str,
             agent_model_backbone: str,
             max_steps: int=100,
-            num_papers_lit_review: int=15,
+            num_papers_lit_review: int=20,
             notes: list=[],
             compile_pdf: bool=True,
             human_in_loop_flag=None,
@@ -152,7 +152,8 @@ class LaboratoryWorkflow:
         """
         for phase, subtasks in self.phases:
             phase_start_time = time.time()  # Start timing the phase
-            if self.verbose: print(f"{'*'*50}\nBeginning phase: {phase}\n{'*'*50}")
+            if self.verbose: 
+                print(f"{'*'*50}\nBeginning phase: {phase}\n{'*'*50}")
             for subtask in subtasks:
                 if self.verbose: print(f"{'&'*30}\nBeginning subtask: {subtask}\n{'&'*30}")
                 if type(self.phase_models) == dict:
@@ -468,7 +469,7 @@ class LaboratoryWorkflow:
         max_tries = self.max_steps * 5 # lit review often requires extra steps
         # get initial response from PhD agent
         resp = self.phd.inference(self.research_topic, "literature review", step=0, temp=0.8)
-        if self.verbose: print(resp, "\n~~~~~~~~~~~")
+        # if self.verbose: print(resp, "\n~~~~~~~~~~~")
         # iterate until max num tries to complete task is exhausted
         for _i in range(max_tries):
             feedback = str()
@@ -554,7 +555,7 @@ if __name__ == "__main__":
     parser.add_argument("--llm-backend", type=str, default="gemini-2.0-flash", help="LLM backend to use for agents in Agent Laboratory")
     parser.add_argument("--compile-pdf", action="store_true", help="Compile latex into pdf during paper writing phase. Disable if you can not install pdflatex")
     parser.add_argument("--max-steps", type=int, default=100, help="Max number of steps for each phase, i.e. compute tolerance budget")
-    parser.add_argument("--num-papers-lit-review", type=int, default="15", help="Total number of papers to summarize in literature review stage")
+    parser.add_argument("--num-papers-lit-review", type=int, default="20", help="Total number of papers to summarize in literature review stage")
     parser.add_argument("--papersolver-max-steps", type=int, default="5", help="Total number of paper-solver steps")
     parser.add_argument("--mlesolver-max-steps", type=int, default="3", help="Total number of mle-solver steps")
     parser.add_argument("--load-existing", action="store_true", help="Load existing state without starting a new workflow")

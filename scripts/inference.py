@@ -1,8 +1,4 @@
 import os
-import json
-import time
-import openai
-import tiktoken
 
 from openai import OpenAI
 from tenacity import retry, stop_after_attempt, wait_random_exponential

@@ -37,7 +37,7 @@ class LaboratoryWorkflow:
 
         # load the environment variables to get the api key
         load_dotenv()
-        self.openai_api_key = os.getenv("GEMINI_API_KEY")
+        self.openai_api_key = os.getenv("API_KEY")
 
         self.research_topic = research_topic
         self.model_backbone = agent_model_backbone

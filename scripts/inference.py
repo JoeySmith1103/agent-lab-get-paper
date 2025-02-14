@@ -11,9 +11,11 @@ def call_openai_api(
     model: str = "gemini-2.0-flash",
     temperature: float = 0.8,
 ):
+    is_gemini = "gemini" in model
+
     client = OpenAI(
-        api_key=os.environ["GEMINI_API_KEY"],
-        base_url="https://generativelanguage.googleapis.com/v1beta/openai/"
+        api_key=os.environ["API_KEY"],
+        base_url="https://generativelanguage.googleapis.com/v1beta/openai/" if is_gemini else None,
     )
     completion = client.chat.completions.create(
         model=model,

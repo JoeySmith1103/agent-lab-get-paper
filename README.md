@@ -34,7 +34,7 @@ Agent Laboratory is an end-to-end autonomous research workflow meant to assist y
 
 Before running the code, you should do some configurations.
 
-0. Add your `GEMINI_API_KEY` to `.env` file
+0. Add your `API_KEY` to `.env` file
 1. Setup `copilot_settings.json` to configure which phases the human should be involved in.
     * true: human is involved
     * false: human is not involved
